@@ -8,3 +8,4 @@ scikit-learn
 pymongo
 passlib[bcrypt]
 itsdangerous
+certifi
