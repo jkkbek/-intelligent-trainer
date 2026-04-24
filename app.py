@@ -36,7 +36,7 @@ from database.mongo import (
 )
 
 app = FastAPI(title="Intelligent Trainer")
-app.add_middleware(SessionMiddleware, secret_key="change_this_secret_key_for_production")
+app.add_middleware(SessionMiddleware, secret_key="aibek_diploma")
 app.add_middleware(
 
     SessionMiddleware,
