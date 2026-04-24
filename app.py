@@ -1,5 +1,6 @@
 from typing import Optional, List
 from datetime import datetime
+import os
 
 from bson import ObjectId
 from fastapi import FastAPI, Request, Form, Query
@@ -36,7 +37,13 @@ from database.mongo import (
 
 app = FastAPI(title="Intelligent Trainer")
 app.add_middleware(SessionMiddleware, secret_key="change_this_secret_key_for_production")
+app.add_middleware(
 
+    SessionMiddleware,
+
+    secret_key=os.getenv("SESSION_SECRET", "aibek_diploma")
+
+)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 

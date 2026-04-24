@@ -1,18 +1,13 @@
-from pymongo import MongoClient
+import os
 import certifi
+from pymongo import MongoClient
 
-MONGO_URI = "mongodb+srv://jksbkaibek_db_user:gQlka13bX6k1jmn2@cluster0.i2pq5pr.mongodb.net/?appName=Cluster0 "
-
-client = MongoClient(MONGO_URI)
+MONGO_URI = os.getenv("MONGO_URI", "")
 
 client = MongoClient(
-
     MONGO_URI,
-
     tls=True,
-
     tlsCAFile=certifi.where(),
-
 )
 
 db = client["Intelligent_Trainer"]
