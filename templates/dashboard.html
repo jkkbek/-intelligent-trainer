@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header class="navbar navbar-dark">
+        <div class="nav-brand">Intelligent Trainer</div>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/form">Recommendation</a>
+            <a href="/library">Exercise Library</a>
+            <a href="/weekly-plan">Weekly Plan</a>
+            <a href="/log">Workout Log</a>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/logout">Logout</a>
+        </nav>
+    </header>
+
+    <div class="page-wrap page-top-space dashboard-page-bg">
+        <div class="dashboard-layout fade-in-up">
+            <section class="dashboard-hero">
+                <div class="dashboard-hero-text">
+                    <span class="result-tag">Training Analytics</span>
+                    <h1>Dashboard</h1>
+                    <p>
+                        Track your training consistency, fatigue, workout difficulty,
+                        recommendation patterns, and recent session history.
+                    </p>
+                </div>
+
+                <div class="dashboard-hero-side">
+                    <div class="dashboard-highlight-card">
+                        <span>Total Logs</span>
+                        <strong>{{ total_logs }}</strong>
+                    </div>
+                    <div class="dashboard-highlight-card">
+                        <span>Avg Rating</span>
+                        <strong>{{ avg_rating }}</strong>
+                    </div>
+                </div>
+            </section>
+
+            <section class="dashboard-user-panel">
+                <div class="dashboard-user-card">
+                    <span class="dashboard-user-label">Logged in as</span>
+                    <h2>{{ current_user.full_name if current_user else "User" }}</h2>
+                    <p>{{ current_user.email if current_user else "" }}</p>
+                </div>
+
+                <div class="dashboard-user-actions">
+                    <div class="dashboard-user-action-card">
+                        <span>Favorites</span>
+                        <strong>{{ favorites_count }}</strong>
+                    </div>
+                    <div class="dashboard-user-action-card">
+                        <span>Weekly Plan Entries</span>
+                        <strong>{{ weekly_plan_count }}</strong>
+                    </div>
+                </div>
+            </section>
+
+            <section class="dashboard-top-grid">
+                <div class="dashboard-stat-card dashboard-stat-primary">
+                    <span class="dashboard-stat-label">Completed Sessions</span>
+                    <strong class="dashboard-stat-value">{{ completed_logs }}</strong>
+                    <p class="dashboard-stat-note">Successfully completed workouts.</p>
+                </div>
+
+                <div class="dashboard-stat-card">
+                    <span class="dashboard-stat-label">Average Duration</span>
+                    <strong class="dashboard-stat-value">{{ avg_duration }} min</strong>
+                    <p class="dashboard-stat-note">Average planned duration from saved logs.</p>
+                </div>
+
+                <div class="dashboard-stat-card">
+                    <span class="dashboard-stat-label">Most Common Workout</span>
+                    <strong class="dashboard-stat-value dashboard-stat-text">
+                        {{ most_common_workout_type or "Not enough data" }}
+                    </strong>
+                    <p class="dashboard-stat-note">Most frequently repeated workout type.</p>
+                </div>
+            </section>
+
+            <div class="dashboard-section-grid">
+                <section class="dashboard-panel">
+                    <div class="dashboard-panel-header">
+                        <div>
+                            <h2>Completion Overview</h2>
+                            <p>How consistently the planned sessions were completed.</p>
+                        </div>
+                        <span class="dashboard-chip">Workout Status</span>
+                    </div>
+
+                    <div class="dashboard-bar-list">
+                        <div class="dashboard-bar-row">
+                            <div class="dashboard-bar-meta">
+                                <span>Completed</span>
+                                <strong>{{ completed_logs }}</strong>
+                            </div>
+                            <div class="dashboard-bar-track">
+                                <div class="dashboard-bar-fill fill-completed"
+                                     style="width: {{ (completed_logs / total_logs * 100) if total_logs else 0 }}%;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="dashboard-bar-row">
+                            <div class="dashboard-bar-meta">
+                                <span>Partial</span>
+                                <strong>{{ partial_logs }}</strong>
+                            </div>
+                            <div class="dashboard-bar-track">
+                                <div class="dashboard-bar-fill fill-partial"
+                                     style="width: {{ (partial_logs / total_logs * 100) if total_logs else 0 }}%;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="dashboard-bar-row">
+                            <div class="dashboard-bar-meta">
+                                <span>Missed</span>
+                                <strong>{{ missed_logs }}</strong>
+                            </div>
+                            <div class="dashboard-bar-track">
+                                <div class="dashboard-bar-fill fill-missed"
+                                     style="width: {{ (missed_logs / total_logs * 100) if total_logs else 0 }}%;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="dashboard-panel">
+                    <div class="dashboard-panel-header">
+                        <div>
+                            <h2>Difficulty Overview</h2>
+                            <p>How difficult recent sessions felt to the user.</p>
+                        </div>
+                        <span class="dashboard-chip">Session Difficulty</span>
+                    </div>
+
+                    <div class="dashboard-mini-stat-grid">
+                        <div class="dashboard-mini-stat">
+                            <span>Easy</span>
+                            <strong>{{ easy_logs }}</strong>
+                        </div>
+                        <div class="dashboard-mini-stat">
+                            <span>Moderate</span>
+                            <strong>{{ moderate_logs }}</strong>
+                        </div>
+                        <div class="dashboard-mini-stat">
+                            <span>Hard</span>
+                            <strong>{{ hard_logs }}</strong>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-note-box">
+                        Moderate sessions appear most often when the training load is balanced.
+                    </div>
+                </section>
+            </div>
+
+            <div class="dashboard-section-grid">
+                <section class="dashboard-panel">
+                    <div class="dashboard-panel-header">
+                        <div>
+                            <h2>Fatigue Overview</h2>
+                            <p>Post-workout fatigue level from saved logs.</p>
+                        </div>
+                        <span class="dashboard-chip">Recovery Signal</span>
+                    </div>
+
+                    <div class="dashboard-mini-stat-grid">
+                        <div class="dashboard-mini-stat">
+                            <span>Low</span>
+                            <strong>{{ low_fatigue }}</strong>
+                        </div>
+                        <div class="dashboard-mini-stat">
+                            <span>Moderate</span>
+                            <strong>{{ moderate_fatigue }}</strong>
+                        </div>
+                        <div class="dashboard-mini-stat">
+                            <span>High</span>
+                            <strong>{{ high_fatigue }}</strong>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-note-box">
+                        High fatigue indicates that future plans may need more recovery emphasis.
+                    </div>
+                </section>
+
+                <section class="dashboard-panel">
+                    <div class="dashboard-panel-header">
+                        <div>
+                            <h2>Recommendation Intensity</h2>
+                            <p>Distribution of saved recommendation levels.</p>
+                        </div>
+                        <span class="dashboard-chip">Saved Plans</span>
+                    </div>
+
+                    <div class="dashboard-mini-stat-grid">
+                        <div class="dashboard-mini-stat">
+                            <span>Low</span>
+                            <strong>{{ intensity_counts.low }}</strong>
+                        </div>
+                        <div class="dashboard-mini-stat">
+                            <span>Moderate</span>
+                            <strong>{{ intensity_counts.moderate }}</strong>
+                        </div>
+                        <div class="dashboard-mini-stat">
+                            <span>High</span>
+                            <strong>{{ intensity_counts.high }}</strong>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-note-box">
+                        This shows which recommendation intensity is most often generated by the system.
+                    </div>
+                </section>
+            </div>
+
+            <section class="dashboard-panel dashboard-history-panel">
+                <div class="dashboard-panel-header">
+                    <div>
+                        <h2>History Insight</h2>
+                        <p>Short adaptive interpretation based on recent workout records.</p>
+                    </div>
+                    <span class="dashboard-chip">Adaptive Summary</span>
+                </div>
+
+                <div class="dashboard-history-text">
+                    {{ history_note }}
+                </div>
+            </section>
+<section class="dashboard-panel">
+    <div class="dashboard-panel-header">
+        <div>
+            <h2>Upcoming Planned Workouts</h2>
+        </div>
+        <span class="dashboard-chip">Weekly Plan</span>
+    </div>
+
+    {% if planned_workouts %}
+        <div class="dashboard-planned-grid">
+            {% for item in planned_workouts %}
+                <article class="dashboard-planned-card">
+                    <div class="dashboard-planned-top">
+                        <div>
+                            <h3>{{ item.planned_workout_type or item.exercise_name }}</h3>
+                            <p class="dashboard-planned-day">{{ item.day_of_week }}</p>
+                        </div>
+                        <span class="weekly-status-pill weekly-status-{{ item.status or 'planned' }}">
+                            {{ item.status or 'planned' }}
+                        </span>
+                    </div>
+
+                    <div class="dashboard-timeline-tags">
+                        {% if item.body_part %}
+                            <span>{{ item.body_part }}</span>
+                        {% endif %}
+                        {% if item.target %}
+                            <span>{{ item.target }}</span>
+                        {% endif %}
+                        {% if item.equipment %}
+                            <span>{{ item.equipment }}</span>
+                        {% endif %}
+                    </div>
+
+                    {% if item.planned_duration %}
+                        <p><strong>Duration:</strong> {{ item.planned_duration }}</p>
+                    {% endif %}
+
+                    {% if item.planned_intensity %}
+                        <p><strong>Intensity:</strong> {{ item.planned_intensity }}</p>
+                    {% endif %}
+
+                    {% if item.planned_exercises %}
+                        <div class="dashboard-planned-exercises">
+                            {% for exercise in item.planned_exercises %}
+                                {% if exercise is mapping %}
+                                    <span>{{ exercise.name }}</span>
+                                {% else %}
+                                    <span>{{ exercise }}</span>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <div class="weekly-plan-actions" style="margin-top: 14px;">
+                        <a href="/log?weekly_plan_id={{ item.id }}" class="btn-primary btn-small">Log Workout</a>
+                    </div>
+                </article>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="dashboard-empty-state">
+            <h3>No planned workouts yet</h3>
+            <p>Add a recommendation to your weekly plan to see it here.</p>
+            <a href="/form" class="btn-primary">Generate Recommendation</a>
+        </div>
+    {% endif %}
+</section>
+            <section class="dashboard-panel">
+                <div class="dashboard-panel-header">
+                    <div>
+                        <h2>Recent Workout Logs</h2>
+                        <p>Your latest saved workout sessions.</p>
+                    </div>
+                    <span class="dashboard-chip">Latest Activity</span>
+                </div>
+
+                {% if recent_logs %}
+                    <div class="dashboard-timeline">
+                        {% for log in recent_logs %}
+                            <article class="dashboard-timeline-card">
+                                <div class="dashboard-timeline-top">
+                                    <div>
+                                        <h3>{{ log.planned_workout_type or "Workout Plan" }}</h3>
+                                        <p class="dashboard-timeline-date">{{ log.workout_date }}</p>
+                                    </div>
+                                    <span class="dashboard-status-pill status-{{ log.completed }}">
+                                        {{ log.completed }}
+                                    </span>
+                                </div>
+
+                                <div class="dashboard-timeline-tags">
+                                    <span>Difficulty: {{ log.difficulty }}</span>
+                                    <span>Fatigue: {{ log.fatigue_after_workout }}</span>
+                                    <span>Intensity: {{ log.planned_intensity }}</span>
+                                </div>
+
+                                {% if log.completed_exercises %}
+                                    <p><strong>Completed exercises:</strong> {{ log.completed_exercises | join(", ") }}</p>
+                                {% endif %}
+
+                                {% if log.notes %}
+                                    <p><strong>Notes:</strong> {{ log.notes }}</p>
+                                {% endif %}
+                            </article>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="dashboard-empty-state">
+                        <h3>No workout logs yet</h3>
+                        <p>Save your first workout log to start building analytics.</p>
+                        <a href="/log" class="btn-primary">Open Workout Log</a>
+                    </div>
+                {% endif %}
+            </section>
+
+            <section class="dashboard-logout-panel">
+                <div class="dashboard-logout-card">
+                    <div>
+                        <span class="dashboard-user-label">Account</span>
+                        <h3>Want to leave your session?</h3>
+                        <p>You can safely log out here and come back later.</p>
+                    </div>
+                    <a href="/logout" class="dashboard-danger-btn">Logout</a>
+                </div>
+            </section>
+        </div>
+    </div>
+</body>
+</html>

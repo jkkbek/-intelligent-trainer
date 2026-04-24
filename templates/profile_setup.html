@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if is_edit %}Edit Profile{% else %}Complete Profile{% endif %}</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header class="navbar navbar-dark">
+        <div class="nav-brand">Intelligent Trainer</div>
+        <nav>
+            <a href="/">Home</a>
+            {% if current_user and current_user.profile_completed %}
+                <a href="/dashboard">Dashboard</a>
+                <a href="/profile">Profile</a>
+                <a href="/logout">Logout</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <main class="page-wrap page-top-space">
+        <div class="profile-setup-shell fade-in-up">
+            <section class="profile-hero-card">
+                <div class="profile-hero-content">
+                    <span class="page-badge">{% if is_edit %}Profile{% else %}Welcome{% endif %}</span>
+                    <h1>{% if is_edit %}Edit Your Training Profile{% else %}Complete Your Training Profile{% endif %}</h1>
+                    <p>
+                        {% if is_edit %}
+                            Update your stable training information. These values are used in future recommendations.
+                        {% else %}
+                            Fill this in once so the system can remember your core training profile and stop asking for the same information every time.
+                        {% endif %}
+                    </p>
+                </div>
+            </section>
+
+            <section class="form-card profile-form-card">
+                <div class="section-head section-head-compact">
+                    <h2>Profile Information</h2>
+                </div>
+
+                <form method="post" action="{% if is_edit %}/profile{% else %}/profile/setup{% endif %}">
+                    <div class="grid-two">
+                        <div class="field-card">
+                            <label>Age</label>
+                            <input type="number" name="age" required value="{{ current_user.age or '' }}" placeholder="Enter your age">
+                        </div>
+
+                        <div class="field-card">
+                            <label>Gender</label>
+                            <select name="gender" required>
+                                <option value="">Select gender</option>
+                                <option value="male" {% if current_user.gender == "male" %}selected{% endif %}>Male</option>
+                                <option value="female" {% if current_user.gender == "female" %}selected{% endif %}>Female</option>
+                            </select>
+                        </div>
+
+                        <div class="field-card">
+                            <label>Height (cm)</label>
+                            <input type="number" step="0.1" name="height_cm" required value="{{ current_user.height_cm or '' }}" placeholder="e.g. 168">
+                        </div>
+
+                        <div class="field-card">
+                            <label>Weight (kg)</label>
+                            <input type="number" step="0.1" name="weight_kg" required value="{{ current_user.weight_kg or '' }}" placeholder="e.g. 58">
+                        </div>
+
+                        <div class="field-card">
+                            <label>Experience Level</label>
+                            <select name="experience_level" required>
+                                <option value="">Select level</option>
+                                <option value="beginner" {% if current_user.experience_level == "beginner" %}selected{% endif %}>Beginner</option>
+                                <option value="intermediate" {% if current_user.experience_level == "intermediate" %}selected{% endif %}>Intermediate</option>
+                                <option value="advanced" {% if current_user.experience_level == "advanced" %}selected{% endif %}>Advanced</option>
+                            </select>
+                        </div>
+
+                        <div class="field-card">
+                            <label>Main Goal</label>
+                            <select name="main_goal" required>
+                                <option value="">Select goal</option>
+                                <option value="weight_loss" {% if current_user.main_goal == "weight_loss" %}selected{% endif %}>Weight Loss</option>
+                                <option value="muscle_gain" {% if current_user.main_goal == "muscle_gain" %}selected{% endif %}>Muscle Gain</option>
+                                <option value="endurance" {% if current_user.main_goal == "endurance" %}selected{% endif %}>Endurance</option>
+                                <option value="general_fitness" {% if current_user.main_goal == "general_fitness" %}selected{% endif %}>General Fitness</option>
+                            </select>
+                        </div>
+
+                        <div class="field-card">
+                            <label>Focus Area</label>
+                            <select name="focus_area" required>
+                                <option value="">Select focus area</option>
+                                <option value="full_body" {% if current_user.focus_area == "full_body" %}selected{% endif %}>Full Body</option>
+                                <option value="upper_body" {% if current_user.focus_area == "upper_body" %}selected{% endif %}>Upper Body</option>
+                                <option value="lower_body" {% if current_user.focus_area == "lower_body" %}selected{% endif %}>Lower Body</option>
+                                <option value="core" {% if current_user.focus_area == "core" %}selected{% endif %}>Core</option>
+                            </select>
+                        </div>
+
+                        <div class="field-card">
+                            <label>Preferred Equipment</label>
+                            <select name="preferred_equipment" required>
+                                <option value="">Select equipment</option>
+                                <option value="gym" {% if current_user.preferred_equipment == "gym" %}selected{% endif %}>Gym Equipment</option>
+                                <option value="home" {% if current_user.preferred_equipment == "home" %}selected{% endif %}>Home Equipment</option>
+                                <option value="bodyweight" {% if current_user.preferred_equipment == "bodyweight" %}selected{% endif %}>Bodyweight Only</option>
+                            </select>
+                        </div>
+
+                        <div class="field-card">
+                            <label>Workouts Per Week</label>
+                            <input type="number" min="1" max="7" name="workout_frequency_days_week" required value="{{ current_user.workout_frequency_days_week or '' }}" placeholder="e.g. 4">
+                        </div>
+                    </div>
+
+                    <div class="form-navigation">
+                        <button type="submit" class="btn-primary">
+                            {% if is_edit %}Save Profile{% else %}Continue{% endif %}
+                        </button>
+
+                        {% if is_edit %}
+                            <a href="/dashboard" class="btn-secondary">Back to Dashboard</a>
+                        {% endif %}
+                    </div>
+                </form>
+            </section>
+        </div>
+    </main>
+</body>
+</html>

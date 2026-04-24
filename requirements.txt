@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+jinja2
+python-multipart
+joblib
+pandas
+scikit-learn
+pymongo
+passlib[bcrypt]
+itsdangerous

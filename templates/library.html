@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercise Library</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header class="navbar navbar-dark">
+        <div class="nav-brand">Intelligent Trainer</div>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/about">About</a>
+            <a href="/form">Recommendation</a>
+            <a href="/library">Exercise Library</a>
+            <a href="/weekly-plan">Weekly Plan</a>
+            <a href="/log">Workout Log</a>
+            <a href="/dashboard">Dashboard</a>
+        </nav>
+    </header>
+
+    <div class="page-wrap page-top-space library-page-bg">
+        <div class="library-layout fade-in-up">
+            <div class="library-header-card">
+                <div>
+                    <span class="result-tag">Exercise Database</span>
+                    <h1>Exercise Library</h1>
+                    <p>Browse exercises, search by name, and filter by body part, equipment, target muscle, or secondary muscles.</p>
+                </div>
+                <div class="library-count-badge">{{ results_count }} results</div>
+            </div>
+
+            <section class="info-section enhanced-section">
+                <div class="section-top">
+                    <h2>Search and Filters</h2>
+                    <span class="section-badge">Interactive Library</span>
+                </div>
+
+                <form action="/library" method="get" class="library-filter-form">
+                    <div class="library-filter-grid">
+                        <div class="field-card">
+                            <label>Search</label>
+                            <input type="text" name="search" value="{{ search }}" placeholder="Search by exercise name or keyword">
+                        </div>
+
+                        <div class="field-card">
+                            <label>Body Part</label>
+                            <select name="body_part">
+                                <option value="">All body parts</option>
+                                {% for item in body_parts %}
+                                    <option value="{{ item }}" {% if selected_body_part == item %}selected{% endif %}>{{ item }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="field-card">
+                            <label>Equipment</label>
+                            <select name="equipment">
+                                <option value="">All equipment</option>
+                                {% for item in equipments %}
+                                    <option value="{{ item }}" {% if selected_equipment == item %}selected{% endif %}>{{ item }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="field-card">
+                            <label>Target Muscle</label>
+                            <select name="target">
+                                <option value="">All targets</option>
+                                {% for item in targets %}
+                                    <option value="{{ item }}" {% if selected_target == item %}selected{% endif %}>{{ item }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="field-card">
+                            <label>Secondary Muscle</label>
+                            <select name="secondary_muscle">
+                                <option value="">All secondary muscles</option>
+                                {% for item in secondary_muscles %}
+                                    <option value="{{ item }}" {% if selected_secondary_muscle == item %}selected{% endif %}>{{ item }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="library-filter-actions">
+                        <button type="submit" class="btn-primary">Apply Filters</button>
+                        <a href="/library" class="btn-secondary">Reset</a>
+                        <a href="/weekly-plan" class="btn-secondary">Open Weekly Plan</a>
+                    </div>
+                </form>
+            </section>
+
+            <section class="info-section enhanced-section">
+                <div class="section-top">
+                    <h2>Exercises</h2>
+                    <span class="section-badge">Preview Cards</span>
+                </div>
+
+                {% if exercises %}
+                    <div class="library-card-grid">
+                        {% for exercise in exercises %}
+                            <article class="library-card">
+                                <a href="/exercise/{{ exercise.id }}" class="library-card-link">
+                                    <div class="library-card-media">
+                                        {% if exercise.gif_media_url %}
+                                            <img src="{{ exercise.gif_media_url }}" alt="{{ exercise.name }}">
+                                        {% elif exercise.image_url %}
+                                            <img src="{{ exercise.image_url }}" alt="{{ exercise.name }}">
+                                        {% else %}
+                                            <div class="exercise-media-placeholder">No media</div>
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="library-card-body">
+                                        <h3>{{ exercise.name }}</h3>
+
+                                        <div class="library-card-tags">
+                                            <span>{{ exercise.body_part or "Unknown body part" }}</span>
+                                            <span>{{ exercise.target or "Unknown target" }}</span>
+                                            <span>{{ exercise.equipment or "Unknown equipment" }}</span>
+                                        </div>
+
+                                        {% if exercise.secondary_muscles %}
+                                            <p><strong>Secondary:</strong> {{ exercise.secondary_muscles | join(", ") }}</p>
+                                        {% elif exercise.instructions %}
+                                            <p>{{ exercise.instructions[0] }}</p>
+                                        {% endif %}
+                                    </div>
+                                </a>
+
+                                <div class="library-card-actions">
+                                    {% if exercise.is_favorite %}
+                                        <span class="favorite-chip">★ Favorite</span>
+                                    {% endif %}
+
+                                    <form action="/weekly-plan/add" method="post" class="inline-form">
+                                        <input type="hidden" name="exercise_id" value="{{ exercise.id }}">
+                                        <input type="hidden" name="day_of_week" value="Monday">
+                                        <button type="submit" class="btn-secondary btn-small">Add to Weekly Plan</button>
+                                    </form>
+                                </div>
+                            </article>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p>No exercises matched the selected filters.</p>
+                {% endif %}
+            </section>
+        </div>
+    </div>
+</body>
+</html>

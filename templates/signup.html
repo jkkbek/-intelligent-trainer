@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header class="navbar navbar-dark">
+        <div class="nav-brand">Intelligent Trainer</div>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/login">Login</a>
+            <a href="/signup">Sign Up</a>
+        </nav>
+    </header>
+
+    <div class="page-wrap page-top-space auth-page-bg">
+        <div class="auth-card fade-in-up">
+            <div class="auth-header">
+                <span class="result-tag">Create Account</span>
+                <h1>Sign Up</h1>
+                <p>Create your account to save plans, logs, favorites, and weekly workouts.</p>
+            </div>
+
+            {% if error %}
+                <div class="auth-error">{{ error }}</div>
+            {% endif %}
+
+            <form action="/signup" method="post" class="auth-form">
+                <div class="field-card">
+                    <label>Full Name</label>
+                    <input type="text" name="full_name" placeholder="Enter your full name" required>
+                </div>
+
+                <div class="field-card">
+                    <label>Email</label>
+                    <input type="email" name="email" placeholder="Enter your email" required>
+                </div>
+
+                <div class="field-card">
+                    <label>Password</label>
+                    <input type="password" name="password" placeholder="Create a password" required>
+                </div>
+
+                <button type="submit" class="btn-primary auth-btn">Create Account</button>
+            </form>
+
+            <p class="auth-footer">
+                Already have an account?
+                <a href="/login">Login</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

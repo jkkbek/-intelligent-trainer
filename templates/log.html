@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workout Log</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header class="navbar navbar-dark">
+        <div class="nav-brand">Intelligent Trainer</div>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/form">Recommendation</a>
+            <a href="/library">Exercise Library</a>
+            <a href="/weekly-plan">Weekly Plan</a>
+            <a href="/log">Workout Log</a>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/profile">Profile</a>
+            <a href="/logout">Logout</a>
+        </nav>
+    </header>
+
+    <main class="page-wrap page-top-space">
+        <div class="recommendation-form-shell fade-in-up">
+            <section class="recommendation-hero-card">
+                <div class="recommendation-hero-content">
+                    <span class="page-badge">Workout Log</span>
+                    <h1>Log Completed Session</h1>
+                    <p>
+                        Save what actually happened after the workout.
+                    </p>
+                </div>
+
+                {% if weekly_plan %}
+                    <div class="recommendation-profile-summary">
+                        <div class="weekly-summary-box">
+                            <span>Day</span>
+                            <strong>{{ weekly_plan.day_of_week }}</strong>
+                        </div>
+
+                        <div class="weekly-summary-box">
+                            <span>Workout</span>
+                            <strong>{{ weekly_plan.planned_workout_type or weekly_plan.exercise_name }}</strong>
+                        </div>
+
+                        <div class="weekly-summary-box">
+                            <span>Duration</span>
+                            <strong>{{ weekly_plan.planned_duration or '—' }}</strong>
+                        </div>
+
+                        <div class="weekly-summary-box">
+                            <span>Intensity</span>
+                            <strong>{{ weekly_plan.planned_intensity or '—' }}</strong>
+                        </div>
+                    </div>
+                {% endif %}
+            </section>
+
+            <section class="form-card profile-form-card">
+                <div class="section-head section-head-compact">
+                    <h2>Workout Log Details</h2>
+                </div>
+
+                <form action="/log/save" method="post">
+                    <input type="hidden" name="recommendation_id" value="{{ recommendation.id if recommendation else '' }}">
+                    <input type="hidden" name="weekly_plan_id" value="{{ weekly_plan.id if weekly_plan else '' }}">
+
+                    <div class="grid-two">
+                        <div class="field-card">
+                            <label>Workout Date</label>
+                            <input type="date" name="workout_date" required>
+                        </div>
+
+                        <div class="field-card">
+                            <label>Was the session completed?</label>
+                            <select name="completed" required>
+                                <option value="">Select</option>
+                                <option value="yes">Yes</option>
+                                <option value="partially">Partially</option>
+                                <option value="no">No</option>
+                            </select>
+                        </div>
+
+                        <div class="field-card">
+                            <label>Difficulty</label>
+                            <select name="difficulty" required>
+                                <option value="">Select difficulty</option>
+                                <option value="easy">Easy</option>
+                                <option value="moderate">Moderate</option>
+                                <option value="hard">Hard</option>
+                            </select>
+                        </div>
+
+                        <div class="field-card">
+                            <label>Fatigue After Workout</label>
+                            <select name="fatigue_after_workout" required>
+                                <option value="">Select fatigue</option>
+                                <option value="low">Low</option>
+                                <option value="moderate">Moderate</option>
+                                <option value="high">High</option>
+                            </select>
+                        </div>
+
+                        <div class="field-card">
+                            <label>User Rating (1–5)</label>
+                            <input type="number" name="user_rating" min="1" max="5" placeholder="Optional">
+                        </div>
+
+                        <div class="field-card full-width">
+    <label>Completed Exercises</label>
+
+    {% set planned_ex_list = [] %}
+
+    {% if weekly_plan and weekly_plan.planned_exercises %}
+        {% set planned_ex_list = weekly_plan.planned_exercises %}
+    {% elif recommendation and recommendation.recommended_exercises %}
+        {% set planned_ex_list = recommendation.recommended_exercises %}
+    {% endif %}
+
+    {% if planned_ex_list %}
+        <div class="exercise-checklist">
+            {% for exercise in planned_ex_list %}
+                {% if exercise is mapping %}
+                    <label class="check-item">
+                        <input type="checkbox" name="completed_exercises" value="{{ exercise.name }}">
+                        <span>{{ exercise.name }}</span>
+                    </label>
+                {% else %}
+                    <label class="check-item">
+                        <input type="checkbox" name="completed_exercises" value="{{ exercise }}">
+                        <span>{{ exercise }}</span>
+                    </label>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <div style="margin-top: 14px;">
+            <label>Additional Completed Exercises</label>
+            <input type="text" name="manual_completed_exercises" placeholder="Optional, separate with |||">
+            <small class="field-note">Example: Squat ||| Lunges ||| Push-ups</small>
+        </div>
+    {% else %}
+        <input type="text" name="manual_completed_exercises" placeholder="Separate with ||| if several">
+        <small class="field-note">Example: Squat ||| Lunges ||| Push-ups</small>
+    {% endif %}
+</div>
+
+                        <div class="field-card full-width">
+                            <label>Notes</label>
+                            <textarea name="notes" rows="5" placeholder="How did the session go?"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-navigation">
+                        <button type="submit" class="btn-primary">Save Workout Log</button>
+                        <a href="/weekly-plan" class="btn-secondary">Back to Weekly Plan</a>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </main>
+</body>
+</html>

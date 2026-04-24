@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercise Details</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header class="navbar navbar-dark">
+        <div class="nav-brand">Intelligent Trainer</div>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/about">About</a>
+            <a href="/form">Recommendation</a>
+            <a href="/library">Exercise Library</a>
+            <a href="/weekly-plan">Weekly Plan</a>
+            <a href="/log">Workout Log</a>
+            <a href="/dashboard">Dashboard</a>
+        </nav>
+    </header>
+
+    <div class="page-wrap page-top-space result-page-bg">
+        {% if exercise %}
+            <div class="result-single-layout fade-in-up">
+                <div class="library-header-card">
+                    <div>
+                        <span class="result-tag">Exercise Details</span>
+                        <h1>{{ exercise.name }}</h1>
+                        <p>Detailed view of the selected exercise from the exercise library.</p>
+                    </div>
+                </div>
+
+                <section class="info-section enhanced-section">
+                    <div class="exercise-detail-layout">
+                        <div class="exercise-detail-media">
+                            {% if exercise.gif_media_url %}
+                                <img src="{{ exercise.gif_media_url }}" alt="{{ exercise.name }}">
+                            {% elif exercise.image_url %}
+                                <img src="{{ exercise.image_url }}" alt="{{ exercise.name }}">
+                            {% else %}
+                                <div class="exercise-media-placeholder">No media</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="exercise-detail-info">
+                            <div class="exercise-meta">
+                                <div class="exercise-meta-item">
+                                    <span class="meta-label">Body Part</span>
+                                    <span class="meta-value">{{ exercise.body_part or "Not specified" }}</span>
+                                </div>
+
+                                <div class="exercise-meta-item">
+                                    <span class="meta-label">Target</span>
+                                    <span class="meta-value">{{ exercise.target or "Not specified" }}</span>
+                                </div>
+
+                                <div class="exercise-meta-item">
+                                    <span class="meta-label">Equipment</span>
+                                    <span class="meta-value">{{ exercise.equipment or "Not specified" }}</span>
+                                </div>
+                            </div>
+
+                            {% if exercise.secondary_muscles %}
+                                <div class="info-section" style="margin-top: 18px;">
+                                    <h2>Secondary Muscles</h2>
+                                    <p>{{ exercise.secondary_muscles | join(", ") }}</p>
+                                </div>
+                            {% endif %}
+
+                            <div class="detail-actions">
+                                {% if is_favorite %}
+                                    <form action="/favorites/remove" method="post" class="inline-form">
+                                        <input type="hidden" name="exercise_id" value="{{ exercise.id }}">
+                                        <button type="submit" class="btn-secondary">Remove from Favorites</button>
+                                    </form>
+                                {% else %}
+                                    <form action="/favorites/add" method="post" class="inline-form">
+                                        <input type="hidden" name="exercise_id" value="{{ exercise.id }}">
+                                        <button type="submit" class="btn-primary">Add to Favorites</button>
+                                    </form>
+                                {% endif %}
+
+                                <form action="/weekly-plan/add" method="post" class="inline-form">
+                                    <input type="hidden" name="exercise_id" value="{{ exercise.id }}">
+                                    <select name="day_of_week" required>
+                                        <option value="Monday">Monday</option>
+                                        <option value="Tuesday">Tuesday</option>
+                                        <option value="Wednesday">Wednesday</option>
+                                        <option value="Thursday">Thursday</option>
+                                        <option value="Friday">Friday</option>
+                                        <option value="Saturday">Saturday</option>
+                                        <option value="Sunday">Sunday</option>
+                                    </select>
+                                    <input type="text" name="planned_sets" placeholder="Sets (optional)">
+                                    <input type="text" name="planned_reps" placeholder="Reps (optional)">
+                                    <button type="submit" class="btn-secondary">Add to Weekly Plan</button>
+                                </form>
+                            </div>
+
+                            <div class="info-section" style="margin-top: 18px;">
+                                <h2>Instructions</h2>
+                                {% if exercise.instructions %}
+                                    <ul class="insight-list">
+                                        {% for step in exercise.instructions %}
+                                            <li>{{ step }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% else %}
+                                    <p>No instructions available.</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="result-actions result-actions-strong">
+                    <a href="/library" class="btn-primary">Back to Exercise Library</a>
+                    <a href="/weekly-plan" class="btn-secondary">Open Weekly Plan</a>
+                </div>
+            </div>
+        {% else %}
+            <div class="content-card">
+                <h1>Exercise not found</h1>
+                <p class="lead">The requested exercise could not be found.</p>
+                <a href="/library" class="btn-primary">Back to Exercise Library</a>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

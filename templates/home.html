@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intelligent Trainer</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header class="navbar navbar-dark">
+        <div class="nav-brand">Intelligent Trainer</div>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/about">About</a>
+            {% if current_user %}
+                <a href="/form">Recommendation</a>
+                <a href="/library">Exercise Library</a>
+                <a href="/weekly-plan">Weekly Plan</a>
+                <a href="/dashboard">Dashboard</a>
+                <a href="/logout">Logout</a>
+            {% else %}
+                <a href="/login">Login</a>
+                <a href="/signup">Sign Up</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <main class="page-wrap page-top-space home-page-shell">
+        <section class="home-product-hero">
+            <div class="home-product-overlay"></div>
+
+            <div class="home-product-content">
+                <span class="hero-pill">AI-powered training platform</span>
+                <h1>Train smarter with personalized workout planning</h1>
+                <p>
+                    Generate adaptive workout recommendations, explore exercises,
+                    organize your weekly routine, and track progress in one place.
+                </p>
+
+                <div class="hero-actions">
+                    {% if current_user %}
+                        <a href="/form" class="btn-primary">Get Recommendation</a>
+                        <a href="/dashboard" class="btn-secondary">Open Dashboard</a>
+                    {% else %}
+                        <a href="/signup" class="btn-primary">Get Started</a>
+                        <a href="/login" class="btn-secondary">Login</a>
+                    {% endif %}
+                </div>
+            </div>
+        </section>
+
+        <section class="content-panel">
+            <div class="section-head section-head-compact">
+                <h2>What you can do</h2>
+            </div>
+
+            <div class="feature-grid-clean">
+                <article class="mini-feature-card">
+                    <h3>Personalized Recommendation</h3>
+                    <p>Generate a workout plan based on your profile, training goal, and physiological indicators.</p>
+                </article>
+
+                <article class="mini-feature-card">
+                    <h3>Exercise Library</h3>
+                    <p>Browse exercises by body part, equipment, target muscle, and secondary muscles.</p>
+                </article>
+
+                <article class="mini-feature-card">
+                    <h3>Weekly Plan</h3>
+                    <p>Structure your routine across the week and keep your training more organized.</p>
+                </article>
+
+                <article class="mini-feature-card">
+                    <h3>Workout Log</h3>
+                    <p>Save fatigue, difficulty, completion status, notes, and ratings after each session.</p>
+                </article>
+
+                <article class="mini-feature-card">
+                    <h3>Dashboard</h3>
+                    <p>See your progress, workout consistency, fatigue overview, and recommendation patterns.</p>
+                </article>
+
+                <article class="mini-feature-card">
+                    <h3>Adaptive Logic</h3>
+                    <p>The system uses workout history to make future recommendations more realistic.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="content-panel">
+            <div class="section-head section-head-compact">
+                <h2>How it works</h2>
+            </div>
+
+            <div class="steps-grid-clean">
+                <article class="step-card-clean">
+                    <div class="step-number-clean">1</div>
+                    <h3>Create your account</h3>
+                    <p>Save recommendations, favorites, workout logs, and weekly plans in your own profile.</p>
+                </article>
+
+                <article class="step-card-clean">
+                    <div class="step-number-clean">2</div>
+                    <h3>Generate a plan</h3>
+                    <p>Enter your details and let the system build a personalized recommendation.</p>
+                </article>
+
+                <article class="step-card-clean">
+                    <div class="step-number-clean">3</div>
+                    <h3>Build your week</h3>
+                    <p>Add exercises to your weekly planner and organize training days more clearly.</p>
+                </article>
+
+                <article class="step-card-clean">
+                    <div class="step-number-clean">4</div>
+                    <h3>Track and improve</h3>
+                    <p>Use workout logs and history so the system can adapt future recommendations.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="cta-panel-clean">
+            <div>
+                <span class="page-badge">Start now</span>
+                <h2>Build your training workflow in one place</h2>
+                <p>
+                    Move from recommendation to planning, then from logging to analytics,
+                    inside one connected platform.
+                </p>
+            </div>
+
+            <div class="hero-actions">
+                {% if current_user %}
+                    <a href="/weekly-plan" class="btn-primary">Open Weekly Plan</a>
+                    <a href="/library" class="btn-secondary">Explore Library</a>
+                {% else %}
+                    <a href="/signup" class="btn-primary">Create Account</a>
+                    <a href="/login" class="btn-secondary">Login</a>
+                {% endif %}
+            </div>
+        </section>
+    </main>
+</body>
+</html>

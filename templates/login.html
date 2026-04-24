@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header class="navbar navbar-dark">
+        <div class="nav-brand">Intelligent Trainer</div>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/login">Login</a>
+            <a href="/signup">Sign Up</a>
+        </nav>
+    </header>
+
+    <div class="page-wrap page-top-space auth-page-bg">
+        <div class="auth-card fade-in-up">
+            <div class="auth-header">
+                <span class="result-tag">Welcome Back</span>
+                <h1>Login</h1>
+                <p>Enter your email and password to continue.</p>
+            </div>
+
+            {% if error %}
+                <div class="auth-error">{{ error }}</div>
+            {% endif %}
+
+            <form action="/login" method="post" class="auth-form">
+                <div class="field-card">
+                    <label>Email</label>
+                    <input type="email" name="email" placeholder="Enter your email" required>
+                </div>
+
+                <div class="field-card">
+                    <label>Password</label>
+                    <input type="password" name="password" placeholder="Enter your password" required>
+                </div>
+
+                <button type="submit" class="btn-primary auth-btn">Login</button>
+            </form>
+
+            <p class="auth-footer">
+                Don’t have an account?
+                <a href="/signup">Create one</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

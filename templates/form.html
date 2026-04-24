@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Recommendation</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header class="navbar navbar-dark">
+        <div class="nav-brand">Intelligent Trainer</div>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/form">Recommendation</a>
+            <a href="/library">Exercise Library</a>
+            <a href="/weekly-plan">Weekly Plan</a>
+            <a href="/log">Workout Log</a>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/profile">Profile</a>
+            <a href="/logout">Logout</a>
+        </nav>
+    </header>
+
+    <main class="page-wrap page-top-space">
+        <div class="recommendation-form-shell fade-in-up">
+            <section class="recommendation-hero-card">
+                <div class="recommendation-hero-content">
+                    <span class="page-badge">Recommendation</span>
+                    <h1>Current Training Readiness</h1>
+                    <p>
+                        Your profile is already saved. Now enter only your current condition before the next workout.
+                    </p>
+                </div>
+
+                <div class="recommendation-profile-summary">
+                    <div class="weekly-summary-box">
+                        <span>Main Goal</span>
+                        <strong>{{ current_user.main_goal.replace('_', ' ').title() if current_user.main_goal else '—' }}</strong>
+                    </div>
+
+                    <div class="weekly-summary-box">
+                        <span>Experience</span>
+                        <strong>{{ current_user.experience_level.title() if current_user.experience_level else '—' }}</strong>
+                    </div>
+
+                    <div class="weekly-summary-box">
+                        <span>Focus Area</span>
+                        <strong>{{ current_user.focus_area.replace('_', ' ').title() if current_user.focus_area else '—' }}</strong>
+                    </div>
+
+                    <div class="weekly-summary-box">
+                        <span>Workouts / Week</span>
+                        <strong>{{ current_user.workout_frequency_days_week or '—' }}</strong>
+                    </div>
+                </div>
+            </section>
+
+            <section class="form-card profile-form-card">
+                <div class="section-head section-head-compact">
+                    <h2>Current Metrics</h2>
+                </div>
+
+                <form action="/predict" method="post">
+                    <div class="grid-two">
+                        <div class="field-card">
+                            <label>Average BPM During Recent Training</label>
+                            <input type="number" step="0.1" name="avg_bpm" required placeholder="e.g. 135">
+                            <small class="field-note">Required</small>
+                        </div>
+
+                        <div class="field-card">
+                            <label>Session Duration (hours)</label>
+                            <input type="number" step="0.1" name="session_duration_hours" required placeholder="e.g. 1.0">
+                            <small class="field-note">Required</small>
+                        </div>
+
+                        <div class="field-card">
+                            <label>Maximum BPM</label>
+                            <input type="number" step="0.1" name="max_bpm" placeholder="Optional">
+                            <small class="field-note">Optional</small>
+                        </div>
+
+                        <div class="field-card">
+                            <label>Resting BPM</label>
+                            <input type="number" step="0.1" name="resting_bpm" placeholder="Optional">
+                            <small class="field-note">Optional</small>
+                        </div>
+
+                        <div class="field-card">
+                            <label>Fat Percentage</label>
+                            <input type="number" step="0.1" name="fat_percentage" placeholder="Optional">
+                            <small class="field-note">Optional</small>
+                        </div>
+
+                        <div class="field-card">
+                            <label>Water Intake (liters)</label>
+                            <input type="number" step="0.1" name="water_intake_liters" placeholder="Optional">
+                            <small class="field-note">Optional</small>
+                        </div>
+                    </div>
+
+                    <div class="form-navigation">
+                        <button type="submit" class="btn-primary">Generate Recommendation</button>
+                        <a href="/profile" class="btn-secondary">Edit Profile</a>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </main>
+</body>
+</html>

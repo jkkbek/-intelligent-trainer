@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weekly Plan</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header class="navbar navbar-dark">
+        <div class="nav-brand">Intelligent Trainer</div>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/form">Recommendation</a>
+            <a href="/library">Exercise Library</a>
+            <a href="/weekly-plan">Weekly Plan</a>
+            <a href="/log">Workout Log</a>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/profile">Profile</a>
+            <a href="/logout">Logout</a>
+        </nav>
+    </header>
+
+    <main class="page-wrap page-top-space weekly-plan-shell">
+        <section class="weekly-header-clean">
+            <div>
+                <span class="page-badge">Planner</span>
+                <h1>Your Weekly Training Plan</h1>
+                <p>Plan first, then log after the workout is actually completed.</p>
+            </div>
+
+            <div class="weekly-summary-clean">
+                <div class="weekly-summary-box">
+                    <span>Planned Entries</span>
+                    <strong>{{ plans|length }}</strong>
+                </div>
+                <div class="weekly-summary-box">
+                    <span>Favorites</span>
+                    <strong>{{ favorites|length }}</strong>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-panel">
+            <div class="section-head section-head-compact">
+                <h2>Weekly Schedule</h2>
+            </div>
+
+            <div class="weekly-grid-clean">
+                {% for day, items in grouped_plans.items() %}
+                    <article class="weekday-card-clean">
+                        <div class="weekday-head-clean">
+                            <h3>{{ day }}</h3>
+                            <span>{{ items|length }}</span>
+                        </div>
+
+                        {% if items %}
+                            <div class="weekday-items-clean">
+                                {% for item in items %}
+                                    <div class="plan-item-clean">
+                                        <div class="weekly-plan-status-row">
+                                            <h4>{{ item.exercise_name }}</h4>
+                                            <span class="weekly-status-pill weekly-status-{{ item.status or 'planned' }}">
+                                                {{ item.status or 'planned' }}
+                                            </span>
+                                        </div>
+
+                                        <div class="tag-row-clean">
+                                            {% if item.body_part %}<span>{{ item.body_part }}</span>{% endif %}
+                                            {% if item.target %}<span>{{ item.target }}</span>{% endif %}
+                                            {% if item.equipment %}<span>{{ item.equipment }}</span>{% endif %}
+                                        </div>
+
+                                        {% if item.planned_workout_type %}
+                                            <div class="plan-meta-clean">
+                                                <p><strong>Workout:</strong> {{ item.planned_workout_type }}</p>
+                                            </div>
+                                        {% endif %}
+
+                                        {% if item.planned_duration %}
+                                            <div class="plan-meta-clean">
+                                                <p><strong>Duration:</strong> {{ item.planned_duration }}</p>
+                                            </div>
+                                        {% endif %}
+
+                                        {% if item.planned_intensity %}
+                                            <div class="plan-meta-clean">
+                                                <p><strong>Intensity:</strong> {{ item.planned_intensity }}</p>
+                                            </div>
+                                        {% endif %}
+                                        {% if item.planned_exercises %}
+    <div class="weekly-planned-exercises">
+        <p><strong>Planned exercises:</strong></p>
+
+        <div class="weekly-planned-exercise-list">
+            {% for exercise in item.planned_exercises %}
+                {% if exercise is mapping %}
+                    <span>{{ exercise.name }}</span>
+                {% else %}
+                    <span>{{ exercise }}</span>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}
+
+                                        {% if item.planned_sets or item.planned_reps %}
+                                            <div class="plan-meta-clean">
+                                                {% if item.planned_sets %}
+                                                    <p><strong>Sets:</strong> {{ item.planned_sets }}</p>
+                                                {% endif %}
+                                                {% if item.planned_reps %}
+                                                    <p><strong>Reps:</strong> {{ item.planned_reps }}</p>
+                                                {% endif %}
+                                            </div>
+                                        {% endif %}
+
+                                        {% if item.notes %}
+                                            <div class="plan-meta-clean">
+                                                <p><strong>Notes:</strong> {{ item.notes }}</p>
+                                            </div>
+                                        {% endif %}
+
+                                        <div class="weekly-plan-actions">
+                                            <a href="/log?weekly_plan_id={{ item.id }}" class="btn-primary btn-small">Log Workout</a>
+
+                                            <form action="/weekly-plan/delete" method="post" class="inline-form">
+                                                <input type="hidden" name="plan_id" value="{{ item.id }}">
+                                                <button type="submit" class="btn-secondary btn-small">Remove</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="empty-state-clean">
+                                No exercises planned for this day.
+                            </div>
+                        {% endif %}
+                    </article>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="content-panel">
+            <div class="section-head section-head-compact">
+                <h2>Saved Favorites</h2>
+            </div>
+
+            {% if favorites %}
+                <div class="favorites-grid-clean">
+                    {% for item in favorites %}
+                        <article class="favorite-card-clean">
+                            <h3>{{ item.exercise_name }}</h3>
+                            <div class="tag-row-clean">
+                                {% if item.body_part %}<span>{{ item.body_part }}</span>{% endif %}
+                                {% if item.target %}<span>{{ item.target }}</span>{% endif %}
+                                {% if item.equipment %}<span>{{ item.equipment }}</span>{% endif %}
+                            </div>
+                        </article>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state-clean">
+                    No favorite exercises saved yet.
+                </div>
+            {% endif %}
+        </section>
+    </main>
+</body>
+</html>

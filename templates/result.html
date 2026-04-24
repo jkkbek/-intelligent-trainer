@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recommendation Result</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header class="navbar navbar-dark">
+        <div class="nav-brand">Intelligent Trainer</div>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/form">Recommendation</a>
+            <a href="/library">Exercise Library</a>
+            <a href="/weekly-plan">Weekly Plan</a>
+            <a href="/log">Workout Log</a>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/profile">Profile</a>
+            <a href="/logout">Logout</a>
+        </nav>
+    </header>
+
+    <main class="page-wrap page-top-space">
+        <div class="result-single-layout fade-in-up">
+            <section class="result-top-header">
+                <div>
+                    <span class="result-tag">Recommendation Ready</span>
+                    <h1>Your Next Workout Plan</h1>
+                    <p>
+                        This recommendation combines your saved profile, current condition,
+                        and recent workout history.
+                    </p>
+                </div>
+
+                <div class="intensity-pill intensity-{{ result.predicted_intensity.lower() }}">
+                    {{ result.predicted_intensity }}
+                </div>
+            </section>
+
+            <section class="result-hero compact-hero">
+                <div class="result-hero-main">
+                    <div class="result-hero-label">Recommended session</div>
+                    <h2>{{ result.workout_type }}</h2>
+                    <p class="result-hero-description">
+                        {{ result.explanation }}
+                    </p>
+                </div>
+
+                <div class="result-hero-side compact-hero-side">
+                    <div class="mini-stat">
+                        <span>Duration</span>
+                        <strong>{{ result.duration }}</strong>
+                    </div>
+                    <div class="mini-stat">
+                        <span>Style</span>
+                        <strong>{{ result.style }}</strong>
+                    </div>
+                    <div class="mini-stat">
+                        <span>Recovery</span>
+                        <strong>{{ result.recovery_advice }}</strong>
+                    </div>
+                </div>
+            </section>
+
+            <section class="result-grid-simple">
+                <div class="metric-card simple-metric-card">
+                    <span class="metric-label">Goal</span>
+                    <strong class="metric-value">{{ result.goal }}</strong>
+                </div>
+
+                <div class="metric-card simple-metric-card">
+                    <span class="metric-label">Focus Area</span>
+                    <strong class="metric-value">{{ result.focus_area }}</strong>
+                </div>
+
+                <div class="metric-card simple-metric-card">
+                    <span class="metric-label">Equipment</span>
+                    <strong class="metric-value">{{ result.equipment }}</strong>
+                </div>
+
+                <div class="metric-card simple-metric-card">
+                    <span class="metric-label">Experience</span>
+                    <strong class="metric-value">{{ result.experience_level }}</strong>
+                </div>
+            </section>
+
+            <div class="result-sections-grid">
+                <section class="info-section enhanced-section">
+                    <div class="section-top">
+                        <h2>Why This Plan Was Recommended</h2>
+                        <span class="section-badge">Explainable Output</span>
+                    </div>
+
+                    <p>{{ result.explanation }}</p>
+
+                    {% if result.history_note %}
+                        <div class="dashboard-note-box" style="margin-top: 14px;">
+                            {{ result.history_note }}
+                        </div>
+                    {% endif %}
+                </section>
+
+                <section class="info-section enhanced-section">
+                    <div class="section-top">
+                        <h2>Personal Insights</h2>
+                        <span class="section-badge">Adaptive Notes</span>
+                    </div>
+
+                    {% if result.personal_insights %}
+                        <ul class="insight-list">
+                            {% for item in result.personal_insights %}
+                                <li>{{ item }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No additional personal insights were generated.</p>
+                    {% endif %}
+                </section>
+            </div>
+
+            <section class="info-section enhanced-section">
+                <div class="section-top">
+                    <h2>Recommended Exercises</h2>
+                    <span class="section-badge">Exercise Selection</span>
+                </div>
+
+                {% if result.recommended_exercises %}
+                    <div class="recommended-exercise-grid">
+                        {% for exercise in result.recommended_exercises %}
+                            <article class="recommended-exercise-card">
+                                <div class="recommended-exercise-media">
+                                    {% if exercise.image_url %}
+                                        <img src="{{ exercise.image_url }}" alt="{{ exercise.name }}">
+                                    {% else %}
+                                        <div class="exercise-media-placeholder">No image</div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="recommended-exercise-body">
+                                    <h3>{{ exercise.name }}</h3>
+
+                                    <div class="recommended-exercise-tags">
+                                        {% if exercise.body_part %}
+                                            <span>{{ exercise.body_part }}</span>
+                                        {% endif %}
+                                        {% if exercise.target %}
+                                            <span>{{ exercise.target }}</span>
+                                        {% endif %}
+                                        {% if exercise.equipment %}
+                                            <span>{{ exercise.equipment }}</span>
+                                        {% endif %}
+                                    </div>
+
+                                    {% if exercise.instructions %}
+                                        <div class="recommended-exercise-instructions">
+                                            <strong>Instructions</strong>
+                                            <ul>
+                                                {% for step in exercise.instructions[:2] %}
+                                                    <li>{{ step }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </article>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p>No exercises were selected.</p>
+                {% endif %}
+            </section>
+
+            <section class="info-section enhanced-section">
+                <div class="section-top">
+                    <h2>Plan This Workout</h2>
+                    <span class="section-badge">Weekly Plan</span>
+                </div>
+
+                <form action="/weekly-plan/add-recommendation" method="post" class="plan-recommendation-form">
+                    <input type="hidden" name="recommendation_id" value="{{ result.recommendation_id }}">
+
+                    <div class="grid-two">
+                        <div class="field-card">
+                            <label>Choose Day</label>
+                            <select name="day_of_week" required>
+                                <option value="">Select day</option>
+                                <option value="Monday">Monday</option>
+                                <option value="Tuesday">Tuesday</option>
+                                <option value="Wednesday">Wednesday</option>
+                                <option value="Thursday">Thursday</option>
+                                <option value="Friday">Friday</option>
+                                <option value="Saturday">Saturday</option>
+                                <option value="Sunday">Sunday</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="result-actions result-actions-strong" style="margin-top: 18px;">
+                        <button type="submit" class="btn-primary">Add to Weekly Plan</button>
+                        <a href="/form" class="btn-secondary">Generate Another</a>
+                        <a href="/dashboard" class="btn-secondary">Back to Dashboard</a>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </main>
+</body>
+</html>
