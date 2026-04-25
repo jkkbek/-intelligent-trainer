@@ -25,7 +25,6 @@
         <div class="result-single-layout fade-in-up">
             <section class="result-top-header">
                 <div>
-                    <span class="result-tag">Recommendation Ready</span>
                     <h1>Your Next Workout Plan</h1>
                     <p>
                         This recommendation combines your saved profile, current condition,
@@ -38,7 +37,7 @@
                 </div>
             </section>
 
-            <section class="result-hero compact-hero">
+            <section class="result-hero result-hero-improved">
                 <div class="result-hero-main">
                     <div class="result-hero-label">Recommended session</div>
                     <h2>{{ result.workout_type }}</h2>
@@ -47,7 +46,7 @@
                     </p>
                 </div>
 
-                <div class="result-hero-side compact-hero-side">
+                <div class="result-hero-side result-hero-side-tight">
                     <div class="mini-stat">
                         <span>Duration</span>
                         <strong>{{ result.duration }}</strong>
@@ -89,7 +88,6 @@
                 <section class="info-section enhanced-section">
                     <div class="section-top">
                         <h2>Why This Plan Was Recommended</h2>
-                        <span class="section-badge">Explainable Output</span>
                     </div>
 
                     <p>{{ result.explanation }}</p>
@@ -104,7 +102,6 @@
                 <section class="info-section enhanced-section">
                     <div class="section-top">
                         <h2>Personal Insights</h2>
-                        <span class="section-badge">Adaptive Notes</span>
                     </div>
 
                     {% if result.personal_insights %}
@@ -122,7 +119,6 @@
             <section class="info-section enhanced-section">
                 <div class="section-top">
                     <h2>Recommended Exercises</h2>
-                    <span class="section-badge">Exercise Selection</span>
                 </div>
 
                 {% if result.recommended_exercises %}
@@ -174,7 +170,6 @@
             <section class="info-section enhanced-section">
                 <div class="section-top">
                     <h2>Plan This Workout</h2>
-                    <span class="section-badge">Weekly Plan</span>
                 </div>
 
                 <form action="/weekly-plan/add-recommendation" method="post" class="plan-recommendation-form">

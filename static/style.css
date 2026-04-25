@@ -4306,3 +4306,264 @@ body {
         grid-template-columns: 1fr;
     }
 }
+
+.result-top-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    align-items: flex-start;
+    background: rgba(255, 255, 255, 0.82);
+    backdrop-filter: blur(14px);
+    border-radius: 28px;
+    padding: 30px 34px;
+    box-shadow: 0 14px 32px rgba(37, 99, 235, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+}
+
+.result-top-header h1 {
+    font-size: 56px;
+    line-height: 1.02;
+    color: #0f172a;
+    margin-bottom: 14px;
+    font-weight: 800;
+}
+
+.result-top-header p {
+    font-size: 18px;
+    line-height: 1.7;
+    color: #667085;
+    max-width: 860px;
+}
+
+.result-hero-improved {
+    display: flex;
+    justify-content: space-between;
+    gap: 22px;
+    align-items: stretch;
+    background: linear-gradient(135deg, #eff6ff, #ffffff);
+    border-radius: 24px;
+    padding: 22px 24px;
+    border: 1px solid #dbeafe;
+}
+
+.result-hero-main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1;
+}
+
+.result-hero-label {
+    font-size: 15px;
+    color: #667085;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.result-hero-improved h2 {
+    font-size: 34px;
+    line-height: 1.1;
+    color: #1e3a8a;
+    margin-bottom: 12px;
+    max-width: 540px;
+}
+
+.result-hero-description {
+    font-size: 16px;
+    line-height: 1.75;
+    color: #475467;
+    max-width: 600px;
+}
+
+.result-hero-side-tight {
+    min-width: 240px;
+    max-width: 260px;
+    display: grid;
+    gap: 12px;
+}
+
+.result-hero-side-tight .mini-stat {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 16px 18px;
+    border: 1px solid #e5eefc;
+    box-shadow: 0 6px 14px rgba(37, 99, 235, 0.05);
+}
+
+.result-hero-side-tight .mini-stat span {
+    font-size: 13px;
+    margin-bottom: 6px;
+    color: #667085;
+    font-weight: 600;
+    display: block;
+}
+
+.result-hero-side-tight .mini-stat strong {
+    font-size: 18px;
+    line-height: 1.25;
+    color: #111827;
+}
+
+.intensity-pill {
+    padding: 12px 18px;
+    border-radius: 999px;
+    font-size: 16px;
+    font-weight: 700;
+    min-width: 130px;
+    text-align: center;
+}
+
+.result-grid-simple {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+.simple-metric-card {
+    min-height: 120px;
+}
+
+.metric-card,
+.result-box,
+.info-section {
+    padding: 18px 20px;
+}
+
+.metric-value,
+.result-box strong {
+    font-size: 18px;
+}
+
+.info-section h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.info-section p,
+.info-section li {
+    font-size: 15px;
+    line-height: 1.65;
+}
+
+.recommended-exercise-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.recommended-exercise-card {
+    background: #ffffff;
+    border: 1px solid #e5eefc;
+    border-radius: 22px;
+    overflow: hidden;
+    box-shadow: 0 10px 24px rgba(37, 99, 235, 0.06);
+}
+
+.recommended-exercise-media {
+    width: 100%;
+    height: 240px;
+    background: #f8fbff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-bottom: 1px solid #e5eefc;
+}
+
+.recommended-exercise-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: #fff;
+}
+
+.recommended-exercise-body {
+    padding: 18px;
+}
+
+.recommended-exercise-body h3 {
+    font-size: 24px;
+    line-height: 1.18;
+    color: #1f2937;
+    margin-bottom: 14px;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+}
+
+.recommended-exercise-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 14px;
+}
+
+.recommended-exercise-tags span {
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: #eff6ff;
+    color: #1d4ed8;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.recommended-exercise-instructions strong {
+    display: block;
+    margin-bottom: 8px;
+    color: #1e3a8a;
+    font-size: 15px;
+}
+
+.recommended-exercise-instructions ul {
+    padding-left: 18px;
+    margin: 0;
+}
+
+.recommended-exercise-instructions li {
+    margin-bottom: 8px;
+    color: #475467;
+    line-height: 1.6;
+}
+
+.page-badge,
+.result-tag {
+    display: none !important;
+}
+
+@media (max-width: 1100px) {
+    .result-top-header,
+    .result-hero-improved {
+        flex-direction: column;
+    }
+
+    .result-grid-simple,
+    .recommended-exercise-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .result-top-header h1 {
+        font-size: 42px;
+    }
+}
+
+@media (max-width: 800px) {
+    .result-grid-simple,
+    .recommended-exercise-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .result-top-header {
+        padding: 24px;
+    }
+
+    .result-top-header h1 {
+        font-size: 34px;
+    }
+
+    .result-hero-improved h2 {
+        font-size: 28px;
+    }
+
+    .recommended-exercise-media {
+        height: 220px;
+    }
+}
